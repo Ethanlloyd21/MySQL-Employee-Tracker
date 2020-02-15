@@ -12,5 +12,5 @@ So that I can organize and plan my business
 
 This application follows the database shcema containing three variables:
 
-![](img/schema.PNG)
+![](image/schema.PNG)
 
