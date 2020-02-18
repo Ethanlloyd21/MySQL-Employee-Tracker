@@ -1,13 +1,13 @@
 id, title, salary, department_id, 
-1. Sales, 75000, 101
-2. Sales Lead, 85000, 101
-3. Manager,  95000, 101
-4. Software Engineer, 150000, 202
-5. Lead Engineer, 180000, 202
-6. Manager, 200000, 202
-7. Accounting Assistant, 75000, 303
-8. Accountant, 90000, 303
-9. Manager, 120000, 303
-10. Lawyer, 150000, 404
-11. Legal Lead, 180000, 404
-12. Manager, 200000, 404
+10. Sales, 75000, 101
+20. Sales Lead, 85000, 101
+90. Manager,  95000, 101
+30. Software Engineer, 150000, 202
+40. Lead Engineer, 180000, 202
+90. Manager, 200000, 202
+50. Accounting Assistant, 75000, 303
+60. Accountant, 90000, 303
+90. Manager, 120000, 303
+70. Lawyer, 150000, 404
+80. Legal Lead, 180000, 404
+90. Manager, 200000, 404
