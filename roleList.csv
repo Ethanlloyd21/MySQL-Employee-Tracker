@@ -1,4 +1,4 @@
-id, title, salary, department_id, 
+id, title, salary, department_id
 10, Sales, 75000, 101
 20, Sales Lead, 85000, 101
 90, Manager,  95000, 101
