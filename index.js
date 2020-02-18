@@ -95,27 +95,13 @@ function prompt() {
 }
 
 function viewAllEmployees() {
-    inquirer
-        .prompt([
-            {
-                name: 'first_name',
-                type: 'input',
-                message: 'What is the first name of the employee?'
-            },
-            {
-                name: 'last_name',
-                type: 'input',
-                message: 'What is the last name of the employee?'
-            }
-        ])
-        .then(answer => {
-            const query = 'SELECT id, fist_name, last_name, role_id, manager_id FROM employee WHERE ?';
-            connection.query(query, { employee: answer.first_name && answer.last_name }, (err, res) => {
-                if (err) throw err;
-                printRows(res);
-                prompt();
-            });
-        });
+    const query =
+        'SELECT id, first_name, last_name, role_id, manager_id FROM employee WHERE ?';
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+        res.map(row => console.log(row.artist));
+        prompt();
+    });
 }
 
 function viewByDepartment() {
@@ -137,7 +123,27 @@ function addEmployee() {
 }
 
 function removeEmployee() {
-
+    inquirer
+        .prompt([
+            {
+                name: 'first_name',
+                type: 'input',
+                message: 'What is the first name of the employee?'
+            },
+            {
+                name: 'last_name',
+                type: 'input',
+                message: 'What is the last name of the employee?'
+            }
+        ])
+        .then(answer => {
+            const query = 'SELECT id, fist_name, last_name, role_id, manager_id FROM employee WHERE ?';
+            connection.query(query, { employee: answer.first_name && answer.last_name }, (err, res) => {
+                if (err) throw err;
+                printRows(res);
+                prompt();
+            });
+        });
 
 }
 
