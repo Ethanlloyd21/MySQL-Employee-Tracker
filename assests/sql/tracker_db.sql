@@ -28,8 +28,8 @@ CREATE TABLE employee(
     role_id INTEGER NOT NULL,
     manager_id INTEGER,
     PRIMARY KEY(id),
-    INDEX role_ind(role_id),
-	CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES role(id) ON DELETE CASCADE
+    INDEX dep_ind(department_id),
+	CONSTRAINT fk_department FOREIGN KEY(role_id) REFERENCES role(id) ON DELETE CASCADE
 );
 
 SELECT * FROM employee;
