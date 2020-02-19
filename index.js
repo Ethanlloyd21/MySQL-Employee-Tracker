@@ -3,6 +3,8 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 
+
+
 const promptMessages = {
     viewAllEmployees: "View All Employees",
     viewByDepartment: "View All Employees By Department",
@@ -95,9 +97,14 @@ function prompt() {
 }
 
 function viewAllEmployees() {
-    const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name, role.salary FROM employee INNER JOIN role ON (role.id = employee.role_id) INNER JOIN department ON (department.id = role.department_id) ORDER BY employee.id`;
+    const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary
+    FROM employee
+    LEFT JOIN role ON (role.id = employee.role_id)
+    LEFT JOIN department ON (department.id = role.department_id)
+    ORDER BY employee.id`;
     connection.query(query, (err, res) => {
         if (err) throw err;
+        console.log('\n');
         console.table(res);
         prompt();
     });

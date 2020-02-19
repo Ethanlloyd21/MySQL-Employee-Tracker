@@ -8,7 +8,7 @@ CREATE TABLE department(
   name VARCHAR(50) UNIQUE NOT NULL
 );
 
-SELECT * FROM department;
+
 
 CREATE TABLE role(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -19,25 +19,20 @@ CREATE TABLE role(
 	CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE CASCADE
 );
 
-    SELECT * FROM role;
+   
 
 CREATE TABLE employee(
-	id INTEGER NOT NULL AUTO_INCREMENT,
+	id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     role_id INTEGER NOT NULL,
+    CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES role(id) ON DELETE CASCADE,
     manager_id INTEGER,
-    PRIMARY KEY(id),
     INDEX role_ind(role_id),
-	CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES role(id) ON DELETE CASCADE,
-    CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employee(id) ON DELETE SET NULL
-    
+	CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employee(id) ON DELETE SET NULL
 );
-
+SELECT * FROM role;
+SELECT * FROM department;
 SELECT * FROM employee;
 
-SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name, role.salary
-FROM employee
-INNER JOIN role ON (role.id = employee.role_id)
-INNER JOIN department ON (department.id = role.department_id)
-ORDER BY employee.id;
+SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary FROM employee INNER JOIN role ON (role.id = employee.role_id) INNER JOIN department ON (department.id = role.department_id) ORDER BY employee.id;
