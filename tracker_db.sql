@@ -29,9 +29,15 @@ CREATE TABLE employee(
     manager_id INTEGER,
     PRIMARY KEY(id),
     INDEX role_ind(role_id),
-	CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES role(id) ON DELETE CASCADE
+	CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES role(id) ON DELETE CASCADE,
+    CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employee(id) ON DELETE SET NULL
+    
 );
 
 SELECT * FROM employee;
 
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'chargers619';
+SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name, role.salary
+FROM employee
+INNER JOIN role ON (role.id = employee.role_id)
+INNER JOIN department ON (department.id = role.department_id)
+ORDER BY employee.id;

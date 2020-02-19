@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Ethanlloyd21/MySQL-Employee-Tracker#readme",
   "dependencies": {
+    "console.table": "^0.10.0",
     "init": "^0.1.2",
     "inquirer": "^7.0.4",
     "mysql": "^2.18.1"

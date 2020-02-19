@@ -25,7 +25,7 @@ const connection = mysql.createConnection({
     user: 'root',
 
     // Your password
-    password: '',
+    password: 'chargers619',
     database: 'tracker_db'
 });
 
@@ -95,16 +95,16 @@ function prompt() {
 }
 
 function viewAllEmployees() {
-    const query =
-        'SELECT id, first_name, last_name, role_id, manager_id FROM employee WHERE ?';
+    const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name, role.salary FROM employee INNER JOIN role ON (role.id = employee.role_id) INNER JOIN department ON (department.id = role.department_id) ORDER BY employee.id`;
     connection.query(query, (err, res) => {
         if (err) throw err;
-        res.map(row => console.log(row.artist));
+        console.table(res);
         prompt();
     });
 }
 
 function viewByDepartment() {
+    /*
     const query =
         'SELECT artist FROM top5000 GROUP BY artist HAVING count(*) > 1';
     connection.query(query, (err, res) => {
@@ -112,6 +112,7 @@ function viewByDepartment() {
         res.map(row => console.log(row.artist));
         prompt();
     });
+    */
 }
 
 function viewByManager() {
@@ -123,6 +124,7 @@ function addEmployee() {
 }
 
 function removeEmployee() {
+    /*
     inquirer
         .prompt([
             {
@@ -144,6 +146,7 @@ function removeEmployee() {
                 prompt();
             });
         });
+        */
 
 }
 
@@ -193,7 +196,7 @@ function songAndAlbumSearch() {
         })
         .then(answer => {
             const query = `
-        SELECT top_albums.year, top_albums.album, top_albums.position, top5000.song, top5000.artist 
+        SELECT top_albums.year, top_albums.album, top_albums.position, top5000.song, top5000.artist
         FROM top_albums
         INNER JOIN top5000 ON (top_albums.artist = top5000.artist AND top_albums.year = top5000.year)
         WHERE (top_albums.artist = ? AND top5000.artist = ?)
@@ -208,7 +211,7 @@ function songAndAlbumSearch() {
         });
 }
 */
-
+/*
 function printRows(rows) {
     for (let row of rows) {
         printRow(row);
@@ -228,3 +231,4 @@ function printRow(row) {
 function getPrintableColumn(row, column) {
     return `${column}: ${row[column]} | `;
 }
+*/
