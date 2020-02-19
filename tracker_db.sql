@@ -26,13 +26,43 @@ CREATE TABLE employee(
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     role_id INTEGER NOT NULL,
-    CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES role(id) ON DELETE CASCADE,
+    INDEX role_ind (role_id),
+    CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE CASCADE,
     manager_id INTEGER,
-    INDEX role_ind(role_id),
+    INDEX man_ind(manager_id),
 	CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employee(id) ON DELETE SET NULL
 );
-SELECT * FROM role;
-SELECT * FROM department;
-SELECT * FROM employee;
 
-SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary FROM employee INNER JOIN role ON (role.id = employee.role_id) INNER JOIN department ON (department.id = role.department_id) ORDER BY employee.id;
+use tracker_db;
+INSERT INTO department
+    (id, name)
+VALUES
+    (101, 'Sales'),
+    (202, 'Engineering'),
+    (303, 'Finance'),
+    (404, 'Legal');
+INSERT INTO role
+    (title, salary, department_id)
+VALUES
+    ('Sales Lead', 100000, 101),
+    ('Salesperson', 80000, 101),
+    ('Lead Engineer', 150000, 202),
+    ('Software Engineer', 120000, 202),
+    ('Account Manager', 160000, 303),
+    ('Accountant', 125000, 303),
+    ('Legal Team Lead', 250000, 404),
+    ('Lawyer', 190000, 404);
+INSERT INTO employee
+    (first_name, last_name, role_id, manager_id)
+VALUES
+    ('John', 'Doe', 1, NULL),
+    ('Mike', 'Chan', 2, 1),
+    ('Ashley', 'Rodriguez', 3, NULL),
+    ('Kevin', 'Tupik', 4, 3),
+    ('Kunal', 'Singh', 5, NULL),
+    ('Malia', 'Brown', 6, 5),
+    ('Sarah', 'Lourd', 7, NULL),
+    ('Tom', 'Allen', 8, 7);
+
+
+SELECT * FROM employee;
