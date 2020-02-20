@@ -46,11 +46,11 @@ function prompt() {
                 promptMessages.viewAllEmployees,
                 promptMessages.viewByDepartment,
                 promptMessages.viewByManager,
+                promptMessages.viewAllRoles,
                 promptMessages.addEmployee,
                 promptMessages.removeEmployee,
                 promptMessages.updateRole,
                 promptMessages.updateEmployeeManager,
-                promptMessages.viewAllRoles,
                 promptMessages.exit
             ]
         })
@@ -97,145 +97,81 @@ function prompt() {
 }
 
 function viewAllEmployees() {
-    const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary
-    FROM employee
-    LEFT JOIN role ON (role.id = employee.role_id)
-    LEFT JOIN department ON (department.id = role.department_id)
-    ORDER BY employee.id`;
+    const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT (employee.first_name, ' ', employee.last_name) AS manager FROM employee LEFT JOIN role ON (role.id = employee.role_id) LEFT JOIN department ON (department.id = role.department_id) ORDER BY employee.id;`;
     connection.query(query, (err, res) => {
         if (err) throw err;
         console.log('\n');
+        console.log('VIEW ALL EMPLOYEES');
         console.table(res);
         prompt();
     });
 }
 
 function viewByDepartment() {
-    /*
-    const query =
-        'SELECT artist FROM top5000 GROUP BY artist HAVING count(*) > 1';
+    const query = `SELECT department.name AS department, role.title, employee.id, employee.first_name, employee.last_name
+    FROM employee
+    LEFT JOIN role ON (role.id = employee.role_id)
+    LEFT JOIN department ON (department.id = role.department_id)
+    ORDER BY department.name;`;
     connection.query(query, (err, res) => {
         if (err) throw err;
-        res.map(row => console.log(row.artist));
+        console.log('\n');
+        console.log('VIEW EMPLOYEE BY DEPARTMENT');
+        console.table(res);
         prompt();
     });
-    */
 }
+
 
 function viewByManager() {
+    const query = `SELECT CONCAT(manager.first_name, ' ', manager.last_name) AS manager, department.name AS department, employee.first_name, employee.last_name, role.title
+    FROM employee
+    LEFT JOIN employee manager on manager.id = employee.manager_id
+    INNER JOIN role ON (role.id = employee.role_id && employee.manager_id != 'NULL')
+    INNER JOIN department ON (department.id = role.department_id)
+    ORDER BY manager;`;
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+        console.log('\n');
+        console.log('VIEW EMPLOYEE BY MANAGER');
+        console.table(res);
+        prompt();
+    });
+}
+
+function viewAllRoles() {
+    const query = `SELECT role.title, employee.id, employee.first_name, employee.last_name, department.name AS department
+    FROM employee
+    LEFT JOIN role ON (role.id = employee.role_id)
+    LEFT JOIN department ON (department.id = role.department_id)
+    ORDER BY role.title;`;
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+        console.log('\n');
+        console.log('VIEW EMPLOYEE BY ROLE');
+        console.table(res);
+        prompt();
+    });
 
 }
+
 function addEmployee() {
 
 
 }
 
 function removeEmployee() {
-    /*
-    inquirer
-        .prompt([
-            {
-                name: 'first_name',
-                type: 'input',
-                message: 'What is the first name of the employee?'
-            },
-            {
-                name: 'last_name',
-                type: 'input',
-                message: 'What is the last name of the employee?'
-            }
-        ])
-        .then(answer => {
-            const query = 'SELECT id, fist_name, last_name, role_id, manager_id FROM employee WHERE ?';
-            connection.query(query, { employee: answer.first_name && answer.last_name }, (err, res) => {
-                if (err) throw err;
-                printRows(res);
-                prompt();
-            });
-        });
-        */
-
-}
-
-function updateRole() {
 
 
 }
+
 
 function updateEmployeeManager() {
 
 }
 
-function viewAllRoles() {
+function updateRole() {
 
 }
 
 
-
-/*
-function songSearch() {
-    inquirer
-        .prompt({
-            name: 'song',
-            type: 'input',
-            message: 'What song would you like to look for?'
-        })
-        .then(answer => {
-            console.log(answer.song);
-            connection.query(
-                'SELECT * FROM top5000 WHERE ?',
-                { song: answer.song },
-                (err, res) => {
-                    if (err) throw err;
-                    printRow(res[0]);
-                    prompt();
-                }
-            );
-        });
-}
-
-function songAndAlbumSearch() {
-    inquirer
-        .prompt({
-            name: 'artist',
-            type: 'input',
-            message: 'What artist would you like to search for?'
-        })
-        .then(answer => {
-            const query = `
-        SELECT top_albums.year, top_albums.album, top_albums.position, top5000.song, top5000.artist
-        FROM top_albums
-        INNER JOIN top5000 ON (top_albums.artist = top5000.artist AND top_albums.year = top5000.year)
-        WHERE (top_albums.artist = ? AND top5000.artist = ?)
-        ORDER BY top_albums.year, top_albums.position`;
-
-            connection.query(query, [answer.artist, answer.artist], (err, res) => {
-                if (err) throw err;
-                console.log(res.length + ' matches found!');
-                printRows(res);
-                prompt();
-            });
-        });
-}
-*/
-/*
-function printRows(rows) {
-    for (let row of rows) {
-        printRow(row);
-    }
-}
-
-function printRow(row) {
-    if (row) {
-        let rowAsString = '';
-        for (let key in row) {
-            rowAsString += getPrintableColumn(row, key);
-        }
-        console.log(rowAsString);
-    }
-}
-
-function getPrintableColumn(row, column) {
-    return `${column}: ${row[column]} | `;
-}
-*/
