@@ -2,6 +2,7 @@
 
 const mysql = require('mysql');
 const inquirer = require('inquirer');
+require('console.table');
 
 
 
@@ -102,6 +103,7 @@ function viewAllEmployees() {
         if (err) throw err;
         console.log('\n');
         console.log('VIEW ALL EMPLOYEES');
+        console.log('\n');
         console.table(res);
         prompt();
     });
@@ -117,6 +119,7 @@ function viewByDepartment() {
         if (err) throw err;
         console.log('\n');
         console.log('VIEW EMPLOYEE BY DEPARTMENT');
+        console.log('\n');
         console.table(res);
         prompt();
     });
@@ -134,6 +137,7 @@ function viewByManager() {
         if (err) throw err;
         console.log('\n');
         console.log('VIEW EMPLOYEE BY MANAGER');
+        console.log('\n');
         console.table(res);
         prompt();
     });
@@ -149,6 +153,7 @@ function viewAllRoles() {
         if (err) throw err;
         console.log('\n');
         console.log('VIEW EMPLOYEE BY ROLE');
+        console.log('\n');
         console.table(res);
         prompt();
     });
