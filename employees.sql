@@ -54,7 +54,10 @@ VALUES
     ('Malia', 'Brown', 6, 5),
     ('Sarah', 'Lourd', 7, NULL),
     ('Tom', 'Allen', 8, 7);
+    
+SELECT role.id, role.title, role.salary FROM role ORDER BY role.id;
 
+SELECT department.id, department.name FROM department ORDER BY department.id;
 
 SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT (employee.first_name, ' ', employee.last_name) AS manager FROM employee LEFT JOIN role ON (role.id = employee.role_id) LEFT JOIN department ON (department.id = role.department_id) ORDER BY employee.id;
 
