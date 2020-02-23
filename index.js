@@ -76,7 +76,7 @@ function prompt() {
 
                 case promptMessages.removeEmployee:
 
-                    removeEmployee();
+                    remove();
                     break;
 
                 case promptMessages.updateRole:
@@ -162,50 +162,101 @@ function viewAllRoles() {
 }
 
 async function addEmployee() {
-
-
-    const answer = await inquirer.prompt([
-        {
-            name: "first",
-            type: "input",
-            message: "Enter the first name: "
-        },
-        {
-            name: "last",
-            type: "input",
-            message: "Enter the last name: "
-        },
-        {
-            name: "role",
-            type: "input",
-            message: "What is the role of the employee? : "
-
-        },
-        {
-            name: "manager",
-            type: "input",
-            message: "Please refer to the chart above. What is manager ID number?: "
+    const addname = await inquirer.prompt(askName());
+    connection.query('SELECT role.id, role.title FROM role ORDER BY role.id;', async (err, res) => {
+        if (err) throw err;
+        const { role } = await inquirer.prompt([
+            {
+                name: 'role',
+                type: 'list',
+                choices: () => res.map(res => res.title),
+                message: 'What is the employee role?: '
+            }
+        ]);
+        let roleId;
+        for (const row of res) {
+            if (row.title === role) {
+                roleId = row.id;
+                continue;
+            }
         }
-
-    ]);
-    connection.query('INSERT INTO employee SET ?',
-        {
-            first_name: answer.first,
-            last_name: answer.last,
-            role_id: answer.role,
-            manager_id: answer.manager
-        },
-        (err) => {
+        connection.query('SELECT * FROM employee', async (err, res) => {
             if (err) throw err;
-            console.log(`Employee inserted!\n`);
-            // Call updateProduct AFTER the INSERT completes
+            const choices = res.map(res => `${res.first_name} ${res.last_name}`);
+            choices.push('none');
+            const { manager } = await inquirer.prompt([
+                {
+                    name: 'manager',
+                    type: 'list',
+                    choices: choices,
+                    message: 'Choose the employee Manager: '
+                }
+            ]);
+            let managerId;
+            let managerName;
+            if (manager === 'none') {
+                managerId = null;
+            } else {
+                for (const row of res) {
+                    row.fullName = `${row.first_name} ${row.last_name}`;
+                    if (row.fullName === manager) {
+                        managerId = row.id;
+                        managerName = row.fullName;
+                        continue;
+                    }
+                }
+            }
+            console.log('Employee has been added. Please view all employee to verify...');
+            connection.query(
+                'INSERT INTO employee SET ?',
+                {
+                    first_name: addname.first,
+                    last_name: addname.last,
+                    role_id: roleId,
+                    manager_id: managerId
+                },
+                (err, res) => {
+                    if (err) throw err;
+                    prompt();
 
-        }
-    )
+                }
+            );
+        });
+    });
 
-    prompt();
 }
+function remove() {
+    const promptQ = {
+        yes: "yes",
+        no: "no I don't"
+    };
+    console.log("In order to delete an employee, the employee ID must be entered. View all employees to get" +
+        "the employee ID..");
+    inquirer.prompt([
+        {
+            name: "action",
+            type: "list",
+            message: "Do you have the employee ID?",
+            choices: [promptQ.yes, promptQ.no]
+        }
+    ]).then(answer => {
+        if (answer.action === "yes") removeEmployee();
+        else viewAllEmployees();
 
+
+
+    });
+};
+
+function roles() {
+    const query = `SELECT role.id, role.title FROM role ORDER BY role.id;`;
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+        console.log('\n');
+        console.table(res);
+        prompt();
+    });
+}
 async function removeEmployee() {
 
     const answer = await inquirer.prompt([
@@ -245,26 +296,63 @@ function updateRole() {
 
 }
 
-async function show() {
-    const show1 = await `SELECT role.id, role.title FROM role ORDER BY role.id;`;
-    connection.query(show1, (err, res) => {
-        if (err) throw err;
-        console.log('\n');
-        console.table(res);
-    });
-    const show = await `SELECT employee.id, CONCAT(manager.first_name, ' ', manager.last_name) AS manager, department.name AS department, employee.first_name, employee.last_name, role.title
-    FROM employee
-    LEFT JOIN employee manager on manager.id = employee.manager_id
-    INNER JOIN role ON (role.id = employee.role_id && employee.manager_id != 'NULL')
-    INNER JOIN department ON (department.id = role.department_id)
-    ORDER BY manager;`;
-    connection.query(show, (err, res) => {
-        if (err) throw err;
-        console.log('\n');
-        console.table(res);
 
+
+function prompt_Q() {
+    inquirer.prompt([
+        {
+            name: "first",
+            type: "input",
+            message: "Enter the first name: "
+        },
+        {
+            name: "last",
+            type: "input",
+            message: "Enter the last name: "
+        },
+        {
+            name: "role",
+            type: "input",
+            message: "What is the role of the employee? : "
+
+        },
+        {
+            name: "manager",
+            type: "input",
+            message: "Please refer to the chart above. What is manager ID number?: "
+        }
+
+    ]).then(answer => {
+        connection.query('INSERT INTO employee SET ?',
+            {
+                first_name: answer.first,
+                last_name: answer.last,
+                role_id: answer.role,
+                manager_id: answer.manager
+            },
+            (err) => {
+                if (err) throw err;
+                console.log(`Employee inserted!\n`);
+                // Call updateProduct AFTER the INSERT completes
+
+            }
+        )
     });
+
+    prompt();
 }
 
-
-
+function askName() {
+    return ([
+        {
+            name: "first",
+            type: "input",
+            message: "Enter the first name: "
+        },
+        {
+            name: "last",
+            type: "input",
+            message: "Enter the last name: "
+        }
+    ]);
+}
