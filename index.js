@@ -99,7 +99,12 @@ function prompt() {
 }
 
 function viewAllEmployees() {
-    const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT (employee.first_name, ' ', employee.last_name) AS manager FROM employee LEFT JOIN role ON (role.id = employee.role_id) LEFT JOIN department ON (department.id = role.department_id) ORDER BY employee.id;`;
+    const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager
+    FROM employee
+    LEFT JOIN employee manager on manager.id = employee.manager_id
+    INNER JOIN role ON (role.id = employee.role_id)
+    INNER JOIN department ON (department.id = role.department_id)
+    ORDER BY employee.id;`;
     connection.query(query, (err, res) => {
         if (err) throw err;
         console.log('\n');
@@ -128,7 +133,7 @@ function viewByDepartment() {
 
 
 function viewByManager() {
-    const query = `SELECT employee.id, CONCAT(manager.first_name, ' ', manager.last_name) AS manager, department.name AS department, employee.first_name, employee.last_name, role.title
+    const query = `SELECT CONCAT(manager.first_name, ' ', manager.last_name) AS manager, department.name AS department, employee.id, employee.first_name, employee.last_name, role.title
     FROM employee
     LEFT JOIN employee manager on manager.id = employee.manager_id
     INNER JOIN role ON (role.id = employee.role_id && employee.manager_id != 'NULL')
@@ -182,9 +187,9 @@ async function addEmployee() {
         }
         connection.query('SELECT * FROM employee', async (err, res) => {
             if (err) throw err;
-            const choices = res.map(res => `${res.first_name} ${res.last_name}`);
+            let choices = res.map(res => `${res.first_name} ${res.last_name}`);
             choices.push('none');
-            const { manager } = await inquirer.prompt([
+            let { manager } = await inquirer.prompt([
                 {
                     name: 'manager',
                     type: 'list',
@@ -197,11 +202,13 @@ async function addEmployee() {
             if (manager === 'none') {
                 managerId = null;
             } else {
-                for (const row of res) {
-                    row.fullName = `${row.first_name} ${row.last_name}`;
-                    if (row.fullName === manager) {
-                        managerId = row.id;
-                        managerName = row.fullName;
+                for (const data of res) {
+                    data.fullName = `${data.first_name} ${data.last_name}`;
+                    if (data.fullName === manager) {
+                        managerId = data.id;
+                        managerName = data.fullName;
+                        console.log(managerId);
+                        console.log(managerName);
                         continue;
                     }
                 }
@@ -213,7 +220,7 @@ async function addEmployee() {
                     first_name: addname.first,
                     last_name: addname.last,
                     role_id: roleId,
-                    manager_id: managerId
+                    manager_id: parseInt(managerId)
                 },
                 (err, res) => {
                     if (err) throw err;
@@ -228,15 +235,14 @@ async function addEmployee() {
 function remove() {
     const promptQ = {
         yes: "yes",
-        no: "no I don't"
+        no: "no I don't (view all employees on the main option)"
     };
-    console.log("In order to delete an employee, the employee ID must be entered. View all employees to get" +
-        "the employee ID..");
     inquirer.prompt([
         {
             name: "action",
             type: "list",
-            message: "Do you have the employee ID?",
+            message: "In order to delete an employee, an ID must be entered. View all employees to get" +
+                " the employee ID. Do you know the employee ID?",
             choices: [promptQ.yes, promptQ.no]
         }
     ]).then(answer => {
