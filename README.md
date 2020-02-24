@@ -36,6 +36,6 @@ This application follows the database shcema containing three variables:
 ## Demo
 ![](image/screen.PNG)
 
-<a href="https://drive.google.com/file/d/1YR7YOwPlGoaFdIdoFeKc9-ysnnY5sM2P/view"> Click here for a video demo </a>
+Do you want to learn more about this program? Please <a href="https://drive.google.com/file/d/1YR7YOwPlGoaFdIdoFeKc9-ysnnY5sM2P/view"> click here for a video demo </a>.
 
 
