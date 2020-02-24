@@ -39,4 +39,10 @@ This application follows the database shcema containing three variables:
 
 Do you want to learn more about this program? Please <a href="https://drive.google.com/file/d/1YR7YOwPlGoaFdIdoFeKc9-ysnnY5sM2P/view"> click here for a video demo </a>.
 
+## Author
+* Lloyd Marcelino, 02/23/2020
+
+## License
+see The MIT License (MIT)
+
 
