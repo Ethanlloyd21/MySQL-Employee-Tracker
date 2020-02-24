@@ -14,6 +14,26 @@ This application follows the database shcema containing three variables:
 
 ![](image/schema.PNG)
 
+## About
+
+Application tree structure:
+
+* View All Employees - command that prints all employees in a table. Table contains employee id, employee name, title, department, salary and employee manager.
+
+* View All Employees By Manager - command that prints all employee managers and their associates.
+
+* View All Employees By Department - command that prints all departments and the employee under it.
+
+* View All Roles - command that prints all roles/ title and the corresponding employee.
+
+* Add An Employee - command line that adds a new entry to the database.
+
+* Remove An Employee - command line that deletes an employee from the database
+
+* Update Employee Role - command line that updates the role/ title of an employee.
+
+
+
 ## Install
 * npm i - to install all file in order for npm to work
 * npm i inquirer - to use inquirer (to interact with the user via command line)
