@@ -16,7 +16,7 @@ This application follows the database shcema containing three variables:
 
 ## About
 
-Application tree structure:
+Application tree structure: The application is user friendly and built to handle large amount of data (ie: what if the company have about 10,000 employees and 1,000+ roles)
 
 * View All Employees - command that prints all employees in a table. Table contains employee id, employee name, title, department, salary and employee manager.
 
